@@ -4,24 +4,23 @@ require 'faye/websocket'
 require 'google/apis/calendar_v3'
 require 'google/apis/admin_directory_v1'
 require 'json'
-require 'dotenv'
 require 'rufus/scheduler'
 require_relative 'helpers/service_account_credentials.rb'
 
 
 class MeetingRoomDashboard < Sinatra::Base
   configure do
-    Dotenv.load
     set :calendars, Array.new
     set :domain, ENV['MRD_DOMAIN']
     set :token, ENV['MRD_TOKEN']
   end
 
   def credentials_for(scope)
-    ServiceAccountCredentials.new( json_key_file: ENV['MRD_JSON_KEY'],
-                                   person: ENV['MRD_PERSON'],
-                                   scope: scope
-                                 )
+    ServiceAccountCredentials.new(
+      json_key_file: ENV['MRD_JSON_KEY'],
+      person: ENV['MRD_PERSON'],
+      scope: scope
+    )
   end
 
   def get_events(calendar_id)
